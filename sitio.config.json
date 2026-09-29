@@ -1,0 +1,27 @@
+{
+  "_ayuda": "Datos que define el desarrollador (no se editan en /admin). Lo que cambia el cliente está en data/.",
+  "nombre": "GADB Construcciones",
+  "marca_a": "GADB",
+  "marca_b": "Construcciones",
+  "lema": "Construyendo tus ideas",
+  "rubro": "Construcción y remodelación",
+  "schema_tipo": "GeneralContractor",
+  "seo_titulo": "GADB Construcciones · Casas, quinchos, ampliaciones y remodelaciones en La Serena y Coquimbo",
+  "seo_descripcion": "Empresa constructora de Coquimbo: casas, quinchos, ampliaciones, remodelaciones, piscinas y terrazas en La Serena, Coquimbo y el Valle del Elqui. Cotiza sin compromiso por WhatsApp.",
+  "site_url": "https://gadbconstrucciones.vercel.app",
+  "github_repo": "Bemol69/gadbconstrucciones",
+  "google_verificacion": "",
+  "colores": {
+    "acento": "#E2A21B",
+    "acento_oscuro": "#B97F0C",
+    "tinta": "#181917",
+    "grafito": "#232522",
+    "fondo": "#F1EEE8",
+    "papel": "#FAF8F4",
+    "linea": "#DCD6CC"
+  },
+  "fuentes": {
+    "titulos": "Barlow Condensed",
+    "texto": "Barlow"
+  }
+}

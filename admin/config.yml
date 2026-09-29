@@ -1,0 +1,285 @@
+# Configuración del panel /admin (Sveltia CMS)
+# Cada cambio que se guarda aquí crea un commit en GitHub.
+# Vercel arma la web (scripts/build.mjs) y la publica en ~30 segundos.
+
+backend:
+  name: github
+  repo: %%GITHUB_REPO%%
+  branch: main
+  commit_messages:
+    create: "Web: crea {{collection}} «{{slug}}»"
+    update: "Web: actualiza {{collection}} «{{slug}}»"
+    delete: "Web: elimina {{collection}} «{{slug}}»"
+    uploadMedia: "Web: sube foto {{path}}"
+    deleteMedia: "Web: elimina foto {{path}}"
+
+site_url: %%SITE_URL%%
+display_url: %%SITE_URL%%
+logo_url: ../img/logo.jpg
+
+media_folder: img/proyectos
+public_folder: /img/proyectos
+
+# Nombres de archivo sin tildes ni ñ (ej: "Quincho Peñuelas" -> quincho-penuelas.json)
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# Las fotos del celular se achican y convierten a WebP al subirlas, para que la web cargue rápido
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 1800
+          height: 1800
+
+collections:
+  # ---------- PROYECTOS (galería de trabajos) ----------
+  - name: proyectos
+    label: Proyectos
+    label_singular: proyecto
+    description: "Los trabajos que aparecen en «Proyectos que hablan por nosotros». Los destacados salen primero; el primero se muestra en grande."
+    icon: home_work
+    folder: data/proyectos
+    format: json
+    create: true
+    delete: true
+    identifier_field: nombre
+    slug: "{{nombre}}"
+    summary: "{{nombre}} · {{lugar}}"
+    sortable_fields:
+      fields: [orden, nombre]
+      default:
+        field: orden
+        direction: ascending
+    fields:
+      - name: nombre
+        label: Nombre del proyecto
+        hint: "Corto y claro. Ej: Casa La Herradura, Quincho con barra"
+        widget: string
+      - name: lugar
+        label: Comuna o sector
+        hint: "Ej: La Herradura, Coquimbo"
+        widget: string
+        required: false
+      - name: categoria
+        label: Tipo de proyecto
+        hint: "Se usa para los filtros. Escribe siempre igual los mismos tipos (ej: Casas, Quinchos, Exteriores, Remodelaciones, Obras mayores)."
+        widget: string
+        default: Casas
+      - name: anio
+        label: Año
+        hint: "Ej: 2026"
+        widget: string
+        required: false
+        pattern: ["^(19|20)\\d{2}$", "Escribe el año con 4 números, ej: 2026"]
+      - name: descripcion
+        label: Descripción
+        hint: "Una o dos frases: qué se hizo. Ej: Quincho en madera con parrilla, barra y mesón revestido en piedra."
+        widget: text
+        required: false
+      - name: portada
+        label: Foto de portada
+        hint: "La foto que se ve en la tarjeta. Mejor horizontal y con buena luz."
+        widget: image
+      - name: fotos
+        label: Más fotos (galería)
+        hint: "Fotos que se ven al tocar el proyecto: proceso, detalles, terminaciones. Hasta 8 se ve bien."
+        widget: list
+        required: false
+        field: { name: foto, label: Foto, widget: image }
+      - name: destacado
+        label: ¿Destacado?
+        hint: "Los destacados aparecen primero. El primero de todos se ve en grande."
+        widget: boolean
+        default: false
+        required: false
+      - name: orden
+        label: Orden
+        hint: "Número más bajo = aparece antes. Ej: 1, 2, 3…"
+        widget: number
+        value_type: int
+        default: 10
+        required: false
+      - name: visible
+        label: ¿Mostrar en la web?
+        hint: "Apágalo para ocultar el proyecto sin borrarlo."
+        widget: boolean
+        default: true
+        required: false
+
+  # ---------- SERVICIOS ----------
+  - name: servicios
+    label: Servicios
+    label_singular: servicio
+    description: "Las tarjetas de «Obra completa. Control total.». Cada una tiene su botón para cotizar por WhatsApp."
+    icon: construction
+    folder: data/servicios
+    format: json
+    create: true
+    delete: true
+    identifier_field: nombre
+    slug: "{{nombre}}"
+    summary: "{{nombre}}"
+    sortable_fields:
+      fields: [orden, nombre]
+      default:
+        field: orden
+        direction: ascending
+    fields:
+      - name: nombre
+        label: Servicio
+        hint: "Ej: Quinchos"
+        widget: string
+      - name: texto
+        label: Descripción
+        hint: "Una o dos frases. Ej: Quinchos en madera con parrilla, barra y mesón de albañilería."
+        widget: text
+      - name: palabra
+        label: Palabra para el WhatsApp
+        hint: "Llega en negrita en el mensaje de cotización. Ej: QUINCHO"
+        widget: string
+        required: false
+      - name: icono
+        label: Ícono
+        widget: select
+        options:
+          - { label: Casa, value: casa }
+          - { label: Quincho, value: quincho }
+          - { label: Ampliación (+), value: ampliacion }
+          - { label: Remodelación (herramienta), value: remodelacion }
+          - { label: Piscina, value: piscina }
+          - { label: Techo, value: techo }
+        default: casa
+      - name: orden
+        label: Orden
+        hint: "Número más bajo = aparece antes."
+        widget: number
+        value_type: int
+        default: 10
+        required: false
+      - name: visible
+        label: ¿Mostrar en la web?
+        widget: boolean
+        default: true
+        required: false
+
+  # ---------- DATOS GENERALES ----------
+  - name: ajustes
+    label: Datos de la empresa
+    icon: settings
+    files:
+      - name: ajustes
+        label: Contacto, portada y cifras
+        file: data/ajustes.json
+        fields:
+          - name: whatsapp
+            label: WhatsApp para cotizaciones
+            hint: "Formato internacional, solo números. Ej: 56912345678"
+            widget: string
+            pattern: ["^569\\d{8}$", "Debe partir con 569 y tener 11 números, ej: 56912345678"]
+          - name: mensaje_whatsapp
+            label: Mensaje inicial de WhatsApp
+            hint: "Lo que aparece escrito cuando el cliente toca «Cotizar». Ej: Hola GADB 👋 Quiero cotizar un proyecto."
+            widget: string
+          - name: instagram
+            label: Usuario de Instagram
+            hint: "Sin @. Ej: gadbconstrucciones"
+            widget: string
+          - name: email
+            label: Correo
+            widget: string
+            required: false
+            pattern: ["^$|^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", "Escribe un correo válido, ej: contacto@gmail.com"]
+          - name: ciudad
+            label: Ciudad principal
+            widget: string
+          - name: region
+            label: Región
+            widget: string
+            required: false
+          - name: zonas
+            label: Zonas donde trabajan
+            hint: "Aparecen en «Dónde trabajamos» y en el formulario. Ej: La Serena, Coquimbo, Valle del Elqui"
+            widget: list
+          - name: horario
+            label: Horario de atención
+            hint: "Ej: Lunes a sábado · 9:00 a 19:00"
+            widget: string
+            required: false
+          - name: hero_eyebrow
+            label: "Portada: etiqueta de arriba"
+            hint: "Ej: Empresa constructora · La Serena | Coquimbo"
+            widget: string
+          - name: hero_titulo
+            label: "Portada: título"
+            hint: "Ej: Construimos tus ideas."
+            widget: string
+          - name: hero_destacado
+            label: "Portada: segunda línea (en dorado)"
+            hint: "Ej: Hacemos realidad tu proyecto."
+            widget: string
+          - name: hero_bajada
+            label: "Portada: texto"
+            widget: text
+          - name: hero_foto
+            label: "Portada: foto grande"
+            hint: "Horizontal y de buena calidad. Idealmente una obra terminada."
+            widget: image
+          - name: hero_foto_titulo
+            label: "Portada: nombre de la obra de la foto"
+            hint: "Ej: Proyecto La Herradura. Déjalo vacío para no mostrar la etiqueta."
+            widget: string
+            required: false
+          - name: hero_foto_lugar
+            label: "Portada: lugar y año de la foto"
+            hint: "Ej: Coquimbo · 2026"
+            widget: string
+            required: false
+          - name: cifras
+            label: Cifras (máximo 4)
+            hint: "Los números grandes bajo la portada."
+            widget: list
+            max: 4
+            fields:
+              - { name: prefijo, label: "Antes del número (ej: +)", widget: string, required: false }
+              - { name: numero, label: Número, widget: number, value_type: int }
+              - { name: sufijo, label: "Después del número (ej: %)", widget: string, required: false }
+              - { name: texto, label: Texto, widget: string, hint: "Ej: años construyendo en la Región de Coquimbo" }
+          - name: clientes
+            label: Empresas que han confiado en ustedes
+            hint: "Se muestran en la franja «Han confiado en nosotros». Ej: Inmobiliaria Kupal"
+            widget: list
+            required: false
+
+      - name: proceso
+        label: Cómo trabajamos (etapas)
+        file: data/proceso.json
+        fields:
+          - { name: titulo, label: Título, widget: string, hint: "Ej: Cinco etapas. Una ruta clara." }
+          - { name: bajada, label: Texto, widget: text, required: false }
+          - { name: foto, label: Foto, widget: image, hint: "Foto del equipo trabajando en obra." }
+          - name: etapas
+            label: Etapas
+            widget: list
+            fields:
+              - { name: titulo, label: Etapa, widget: string, hint: "Ej: Presupuesto claro" }
+              - { name: texto, label: Detalle, widget: string, hint: "Ej: Partidas, materiales y plazos por escrito." }
+
+      - name: testimonios
+        label: Opiniones de clientes
+        file: data/testimonios.json
+        fields:
+          - name: testimonios
+            label: Opiniones
+            hint: "Copia opiniones reales (WhatsApp, Google, Instagram) con permiso del cliente. La sección aparece cuando hay al menos una."
+            widget: list
+            required: false
+            fields:
+              - { name: texto, label: Opinión, widget: text }
+              - { name: nombre, label: Nombre del cliente, widget: string, hint: "Ej: Natalia M." }
+              - { name: detalle, label: Proyecto y comuna, widget: string, required: false, hint: "Ej: Quincho · La Serena" }

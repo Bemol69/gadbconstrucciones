@@ -1,0 +1,24 @@
+{
+  "whatsapp": "56939221936",
+  "mensaje_whatsapp": "Hola GADB Construcciones 👋 Quiero cotizar un proyecto.",
+  "instagram": "gadbconstrucciones",
+  "email": "gadbconstrucciones@gmail.com",
+  "ciudad": "Coquimbo",
+  "region": "Región de Coquimbo",
+  "zonas": ["La Serena", "Coquimbo", "La Herradura", "Guanaqueros", "Valle del Elqui", "Tongoy"],
+  "horario": "Lunes a sábado · 9:00 a 19:00",
+  "hero_eyebrow": "Empresa constructora · La Serena | Coquimbo",
+  "hero_titulo": "Construimos tus ideas.",
+  "hero_destacado": "Hacemos realidad tu proyecto.",
+  "hero_bajada": "Casas, quinchos, ampliaciones y remodelaciones con terminaciones de calidad. Un equipo propio, responsable y cercano de la primera visita a la entrega.",
+  "hero_foto": "img/proyectos/piedra-2.jpg",
+  "hero_foto_titulo": "Casa Piedra y Jardín",
+  "hero_foto_lugar": "Coquimbo · obra entregada",
+  "cifras": [
+    { "numero": 8, "prefijo": "+", "sufijo": "", "texto": "años construyendo en la Región de Coquimbo" },
+    { "numero": 60, "prefijo": "", "sufijo": "", "texto": "casas en condominio para Inmobiliaria Kupal" },
+    { "numero": 130, "prefijo": "+", "sufijo": "", "texto": "trabajos publicados, de la obra gruesa a la entrega" },
+    { "numero": 100, "prefijo": "", "sufijo": "%", "texto": "mano de obra propia y garantizada" }
+  ],
+  "clientes": ["Inmobiliaria Kupal", "Rosa Agustina Resort", "Recamin", "Condominio Tres Mares", "Cumbres del Sauce II", "Librería Bahé"]
+}

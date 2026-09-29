@@ -1,0 +1,12 @@
+{
+  "titulo": "Cinco etapas. Una ruta clara.",
+  "bajada": "Sabes en qué va tu obra en cada momento. Te mandamos avances por WhatsApp y no hay sorpresas en el presupuesto.",
+  "foto": "img/servicios/equipo-obra.jpg",
+  "etapas": [
+    { "titulo": "Conversación y visita", "texto": "Nos cuentas tu idea, vamos a terreno y tomamos medidas." },
+    { "titulo": "Presupuesto claro", "texto": "Partidas, materiales y plazos por escrito, sin letra chica." },
+    { "titulo": "Planificación de obra", "texto": "Calendario, compra de materiales y equipo asignado." },
+    { "titulo": "Ejecución y seguimiento", "texto": "Obra con equipo propio y avances fotográficos cada semana." },
+    { "titulo": "Entrega y garantía", "texto": "Revisamos cada detalle contigo y respondemos por el trabajo." }
+  ]
+}

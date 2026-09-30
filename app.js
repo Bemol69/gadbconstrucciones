@@ -135,8 +135,10 @@
   const precargadas = new Set();
   const precargar = (src) => { if (src && !precargadas.has(src)) { precargadas.add(src); new Image().src = src; } };
   let turno = 0;
+  // En pantallas chicas se usan las fotos de 1000 px (mucho más livianas)
+  const fotos = () => (innerWidth <= 900 && actual.m ? actual.m : actual.f);
   const mostrar = (i) => {
-    const f = actual.f;
+    const f = fotos();
     idx = (i + f.length) % f.length;
     const src = f[idx];
     const mio = ++turno;
@@ -169,7 +171,7 @@
         const b = document.createElement('button');
         b.type = 'button';
         b.setAttribute('aria-label', `Ver foto ${j + 1}`);
-        b.innerHTML = `<img src="${src}" alt="" loading="lazy">`;
+        b.innerHTML = `<img src="${(actual.t && actual.t[j]) || src}" alt="" width="120" height="120">`;
         b.addEventListener('click', () => mostrar(j));
         th.appendChild(b);
       });

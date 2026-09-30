@@ -154,7 +154,10 @@ const proyectos = readFolder('proyectos').filter(conNombre).map((p) => ({
 // Tarjetas con foto chica; la galería usa una versión grande (1600 px)
 await Promise.all(proyectos.map(async (p, i) => {
   p.mini = await optimizar(p.portada, i === 0 ? 1400 : 800);
-  p.galeria = await Promise.all([p.portada, ...p.fotos].map((f) => optimizar(f, 1600)));
+  const todas = [p.portada, ...p.fotos];
+  p.galeria = await Promise.all(todas.map((f) => optimizar(f, 1600)));
+  p.galeriaMovil = await Promise.all(todas.map((f) => optimizar(f, 1000))); // celulares: carga más rápido
+  p.miniaturas = await Promise.all(todas.map((f) => optimizar(f, 240)));
 }));
 
 const etapas = (Array.isArray(procesoData.etapas) ? procesoData.etapas : [])
@@ -258,7 +261,7 @@ const VARS = {
   // Solo lo que necesita el navegador (app.js)
   SITIO_JSON: JSON.stringify({
     whatsapp: T.whatsapp,
-    proyectos: Object.fromEntries(proyectos.map((p) => [p.id, { n: p.nombre, l: p.lugar, d: p.descripcion, f: p.galeria }])),
+    proyectos: Object.fromEntries(proyectos.map((p) => [p.id, { n: p.nombre, l: p.lugar, d: p.descripcion, f: p.galeria, m: p.galeriaMovil, t: p.miniaturas }])),
   }).replace(/</g, '\\u003c'),
 };
 

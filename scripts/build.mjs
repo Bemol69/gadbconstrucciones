@@ -320,6 +320,8 @@ const BLOQUES = {
   '<!-- SERVICIOS -->': servicios.map(servicioHtml).join(''),
   '<!-- PROYECTOS -->': proyectos.map(proyectoHtml).join(''),
   '<!-- FILTROS -->': filtrosHtml,
+  '<!-- NAV_TIPOS -->': categorias.map((c) => `
+            <a href="#proyectos" data-tipo="${esc(c.id)}">${esc(c.nombre)}</a>`).join(''),
   '<!-- ETAPAS -->': etapas.map(etapaHtml).join(''),
   '<!-- CIFRAS -->': cifras.map(cifraHtml).join(''),
   '<!-- TESTIMONIOS -->': testimonios.map(testimonioHtml).join(''),

@@ -32,7 +32,7 @@
   addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarMenu(); });
 
   // Sección activa en el menú
-  const links = new Map($$('a[href^="#"]', menu).map((a) => [a.getAttribute('href').slice(1), a]));
+  const links = new Map($$(':scope > a[href^="#"], .nav__drop > a', menu).map((a) => [a.getAttribute('href').slice(1), a]));
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((en) => {
       if (!en.isIntersecting) return;
@@ -107,11 +107,23 @@
     });
     if (mas) mas.hidden = todos || filtro !== '*';
   };
-  $$('.chip').forEach((b) => b.addEventListener('click', () => {
-    $$('.chip').forEach((x) => x.classList.toggle('is-on', x === b));
-    filtro = b.dataset.filtro;
+  const filtrar = (id) => {
+    filtro = id;
+    $$('.chip').forEach((x) => x.classList.toggle('is-on', x.dataset.filtro === id));
     pintar();
-  }));
+  };
+  $$('.chip').forEach((b) => b.addEventListener('click', () => filtrar(b.dataset.filtro)));
+
+  // Menú: «Proyectos» despliega los tipos; cada uno baja a la galería ya filtrada
+  const drop = $('.nav__drop');
+  if (drop) {
+    const toggle = $('.nav__drop-btn', drop);
+    const abrirDrop = (open) => { drop.classList.toggle('is-open', open); toggle.setAttribute('aria-expanded', String(open)); };
+    toggle.addEventListener('click', (e) => { e.stopPropagation(); abrirDrop(!drop.classList.contains('is-open')); });
+    document.addEventListener('click', (e) => { if (!drop.contains(e.target)) abrirDrop(false); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirDrop(false); });
+    $$('[data-tipo]', drop).forEach((l) => l.addEventListener('click', () => { filtrar(l.dataset.tipo); abrirDrop(false); }));
+  }
   if (mas) mas.addEventListener('click', () => { todos = true; pintar(); });
 
   // ---------- Galería ----------
@@ -119,10 +131,23 @@
   const lbImg = $('#lb-img');
   let actual = null;
   let idx = 0;
+  // La foto se oculta hasta que la nueva termina de cargar: así nunca se ve la del proyecto anterior
+  const precargadas = new Set();
+  const precargar = (src) => { if (src && !precargadas.has(src)) { precargadas.add(src); new Image().src = src; } };
+  let turno = 0;
   const mostrar = (i) => {
     const f = actual.f;
     idx = (i + f.length) % f.length;
-    lbImg.src = f[idx];
+    const src = f[idx];
+    const mio = ++turno;
+    lbImg.classList.add('is-loading');
+    const listo = () => { if (mio === turno) lbImg.classList.remove('is-loading'); };
+    lbImg.onload = listo;
+    lbImg.onerror = listo;
+    lbImg.src = src;
+    if (lbImg.complete && lbImg.naturalWidth) listo();
+    precargar(f[(idx + 1) % f.length]);
+    precargar(f[(idx - 1 + f.length) % f.length]);
     lbImg.alt = `${actual.n} · foto ${idx + 1} de ${f.length}`;
     $('#lb-count').textContent = `${idx + 1} / ${f.length}`;
     $$('#lb-thumbs button').forEach((b, j) => b.classList.toggle('is-on', j === idx));
@@ -154,7 +179,12 @@
     document.body.style.overflow = 'hidden';
   };
   const cerrar = () => { if (lb.open) lb.close(); };
-  lb.addEventListener('close', () => { document.body.style.overflow = ''; });
+  lb.addEventListener('close', () => {
+    document.body.style.overflow = '';
+    turno++;
+    lbImg.removeAttribute('src'); // al abrir otro proyecto se parte sin foto
+    lbImg.classList.add('is-loading');
+  });
   $$('[data-proyecto]').forEach((b) => b.addEventListener('click', () => abrir(b.dataset.proyecto)));
   $$('[data-step]', lb).forEach((b) => b.addEventListener('click', () => mostrar(idx + Number(b.dataset.step))));
   $('[data-close]', lb).addEventListener('click', cerrar);

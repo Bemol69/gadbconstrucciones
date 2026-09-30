@@ -38,13 +38,13 @@ media_libraries:
           height: 1800
 
 collections:
-  # ---------- TIPOS DE PROYECTO (catálogo: filtros de la galería) ----------
-  - name: tipos
-    label: Tipos de proyecto
-    label_singular: tipo de proyecto
-    description: "El catálogo de tipos (Casas, Quinchos, Remodelaciones…). Aparecen en la lista «Tipo de proyecto» de cada proyecto y como filtros de la galería. Un tipo sin proyectos no se muestra en la web."
-    icon: category
-    folder: data/tipos
+  # ---------- SERVICIOS (también son los tipos de proyecto) ----------
+  - name: servicios
+    label: Servicios
+    label_singular: servicio
+    description: "Las tarjetas de «Obra completa. Control total.». Cada servicio es también un tipo de proyecto: aparece en la lista «Tipo de proyecto» de cada proyecto, en los filtros de la galería y en el menú (cuando tiene al menos un proyecto)."
+    icon: construction
+    folder: data/servicios
     format: json
     create: true
     delete: true
@@ -58,19 +58,38 @@ collections:
         direction: ascending
     fields:
       - name: nombre
-        label: Nombre del tipo
-        hint: "Corto y en plural. Ej: Casas, Quinchos, Remodelaciones, Piscinas"
+        label: Servicio
+        hint: "Ej: Quinchos"
         widget: string
+      - name: texto
+        label: Descripción
+        hint: "Una o dos frases. Ej: Quinchos en madera con parrilla, barra y mesón de albañilería."
+        widget: text
+      - name: palabra
+        label: Palabra para el WhatsApp
+        hint: "Una o dos palabras que llegan en negrita: «Hola GADB 👋 Quiero cotizar: *QUINCHO*». Ej: QUINCHO"
+        widget: string
+        required: false
+      - name: mensaje
+        label: Mensaje de WhatsApp completo (opcional)
+        hint: "Si lo llenas, se envía este texto en vez del mensaje con la palabra. Ej: Hola, quiero cotizar una fosa."
+        widget: string
+        required: false
+      - name: icono
+        label: Ícono
+        hint: "Mira cómo se ve cada uno en %%SITE_URL%%admin/iconos.html"
+        widget: select
+        options:%%ICONOS_OPCIONES%%
+        default: casa
       - name: orden
-        label: Orden en los filtros
-        hint: "Número más bajo = aparece antes. Ej: 1, 2, 3…"
+        label: Orden
+        hint: "Número más bajo = aparece antes."
         widget: number
         value_type: int
         default: 10
         required: false
       - name: visible
         label: ¿Mostrar en la web?
-        hint: "Apágalo para ocultar el filtro. Sus proyectos quedan como «Proyectos» hasta que les cambies el tipo."
         widget: boolean
         default: true
         required: false
@@ -105,9 +124,9 @@ collections:
         required: false
       - name: tipo
         label: Tipo de proyecto
-        hint: "Elige de la lista. Para agregar un tipo nuevo (ej: Piscinas), créalo primero en «Tipos de proyecto»."
+        hint: "Elige el servicio al que corresponde. ¿No está en la lista? Créalo primero en «Servicios» y aparecerá aquí."
         widget: relation
-        collection: tipos
+        collection: servicios
         value_field: "{{slug}}"
         search_fields: [nombre]
         display_fields: [nombre]
@@ -149,62 +168,6 @@ collections:
       - name: visible
         label: ¿Mostrar en la web?
         hint: "Apágalo para ocultar el proyecto sin borrarlo."
-        widget: boolean
-        default: true
-        required: false
-
-  # ---------- SERVICIOS ----------
-  - name: servicios
-    label: Servicios
-    label_singular: servicio
-    description: "Las tarjetas de «Obra completa. Control total.». Cada una tiene su botón para cotizar por WhatsApp."
-    icon: construction
-    folder: data/servicios
-    format: json
-    create: true
-    delete: true
-    identifier_field: nombre
-    slug: "{{nombre}}"
-    summary: "{{nombre}}"
-    sortable_fields:
-      fields: [orden, nombre]
-      default:
-        field: orden
-        direction: ascending
-    fields:
-      - name: nombre
-        label: Servicio
-        hint: "Ej: Quinchos"
-        widget: string
-      - name: texto
-        label: Descripción
-        hint: "Una o dos frases. Ej: Quinchos en madera con parrilla, barra y mesón de albañilería."
-        widget: text
-      - name: palabra
-        label: Palabra para el WhatsApp
-        hint: "Llega en negrita en el mensaje de cotización. Ej: QUINCHO"
-        widget: string
-        required: false
-      - name: icono
-        label: Ícono
-        widget: select
-        options:
-          - { label: Casa, value: casa }
-          - { label: Quincho, value: quincho }
-          - { label: Ampliación (+), value: ampliacion }
-          - { label: Remodelación (herramienta), value: remodelacion }
-          - { label: Piscina, value: piscina }
-          - { label: Techo, value: techo }
-        default: casa
-      - name: orden
-        label: Orden
-        hint: "Número más bajo = aparece antes."
-        widget: number
-        value_type: int
-        default: 10
-        required: false
-      - name: visible
-        label: ¿Mostrar en la web?
         widget: boolean
         default: true
         required: false

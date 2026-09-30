@@ -9,6 +9,7 @@ import { readdirSync, readFileSync, writeFileSync, rmSync, mkdirSync, cpSync, ex
 import { join, basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { ICONOS, iconoSvg } from './iconos.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DATA = join(ROOT, 'data');
@@ -113,28 +114,36 @@ function readFolder(folder) {
 const byOrder = (a, b) => a.orden - b.orden || a.nombre.localeCompare(b.nombre, 'es');
 const conNombre = (x) => x.visible !== false && typeof x.nombre === 'string' && x.nombre.trim();
 
-const servicios = readFolder('servicios').filter(conNombre).map((s) => ({
-  id: s.id,
-  nombre: s.nombre.trim(),
-  texto: str(s.texto),
-  palabra: str(s.palabra) || s.nombre.trim().toUpperCase(),
-  icono: str(s.icono) || 'casa',
-  orden: num(s.orden, 1000),
-})).sort(byOrder);
+// Servicios (data/servicios, editables en /admin). Son también los «tipos de proyecto»:
+// cada proyecto elige uno y los filtros de la galería salen de esta misma lista.
+const servicios = readFolder('servicios').filter(conNombre).map((s) => {
+  const nombre = s.nombre.trim();
+  let palabra = str(s.palabra);
+  let mensaje = str(s.mensaje);
+  // Si en «palabra» escribieron una frase completa, se usa tal cual como mensaje
+  if (!mensaje && palabra.length > 25 && /s/.test(palabra)) { mensaje = palabra; palabra = ''; }
+  const icono = str(s.icono);
+  if (icono && !ICONOS[icono]) console.warn(`⚠️  Servicio «${nombre}»: el ícono «${icono}» no existe, se usa «casa»`);
+  return {
+    id: s.id,
+    nombre,
+    texto: str(s.texto),
+    mensaje: mensaje || `Hola GADB 👋 Quiero cotizar: *${palabra || nombre.toUpperCase()}*`,
+    icono: ICONOS[icono] ? icono : 'casa',
+    orden: num(s.orden, 1000),
+  };
+}).sort(byOrder);
 
-// Tipos de proyecto (data/tipos, editables en /admin): son los filtros de la galería
-const tipos = readFolder('tipos').filter(conNombre).map((t) => ({
-  id: t.id,
-  nombre: t.nombre.trim(),
-  orden: num(t.orden, 1000),
-})).sort(byOrder);
 const normTipo = (s) => str(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-// El proyecto guarda el identificador del tipo; también se acepta el nombre (datos antiguos o escritos a mano)
+// Nombres antiguos de tipos que ahora son un servicio
+const TIPOS_ANTIGUOS = { exteriores: 'piscinas', 'obras mayores': 'obras-mayores', 'obras-mayores': 'obras-mayores' };
+// El proyecto guarda el identificador del servicio; también se acepta el nombre (datos antiguos o escritos a mano)
 function tipoDe(p) {
   const v = str(p.tipo) || str(p.categoria);
-  const t = tipos.find((x) => x.id === v) || tipos.find((x) => normTipo(x.nombre) === normTipo(v));
+  const id = TIPOS_ANTIGUOS[normTipo(v)] || v;
+  const t = servicios.find((x) => x.id === id) || servicios.find((x) => normTipo(x.nombre) === normTipo(v));
   if (t) return t;
-  console.warn(`⚠️  Proyecto «${str(p.nombre)}»: el tipo «${v || '(vacío)'}» no existe o está oculto, se muestra como «Proyectos»`);
+  console.warn(`⚠️  Proyecto «${str(p.nombre)}»: el tipo «${v || '(vacío)'}» no es un servicio visible, se muestra como «Proyectos»`);
   return { id: 'otros', nombre: 'Proyectos', orden: 9999 };
 }
 
@@ -171,7 +180,8 @@ const cifras = (Array.isArray(ajustes.cifras) ? ajustes.cifras : [])
 // Filtros: solo los tipos que tienen al menos un proyecto visible, en el orden elegido en /admin
 const usados = new Map(proyectos.map((p) => [p.tipo.id, p.tipo]));
 const categorias = [...usados.values()].sort(byOrder);
-console.log(`✅ datos: ${servicios.length} servicios, ${tipos.length} tipos, ${proyectos.length} proyectos, ${etapas.length} etapas, ${testimonios.length} testimonios`);
+const proyectosPor = Object.fromEntries(categorias.map((c) => [c.id, proyectos.filter((p) => p.tipo.id === c.id).length]));
+console.log(`✅ datos: ${servicios.length} servicios, ${categorias.length} con proyectos, ${proyectos.length} proyectos, ${etapas.length} etapas, ${testimonios.length} testimonios`);
 
 // ---------- 2. HTML de las secciones ----------
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -179,24 +189,15 @@ const abs = (path) => `${SITE}/${String(path).replace(/^\//, '')}`;
 const pad = (n) => String(n).padStart(2, '0');
 const miles = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-// Íconos de línea (24x24, trazo = currentColor)
-const ICONOS = {
-  casa: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
-  quincho: '<path d="M2 9 12 4l10 5"/><path d="M4 9v11M20 9v11"/><path d="M8 20v-5h8v5"/><path d="M4 13h16"/>',
-  ampliacion: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M12 8v8M8 12h8"/>',
-  remodelacion: '<path d="m14 6 4 4"/><path d="M3 21l3-1 11-11-2-2L4 18z"/><path d="m15 3 6 6"/>',
-  piscina: '<path d="M2 17c2 0 2-1.5 4-1.5S8 17 10 17s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/><path d="M2 21c2 0 2-1.5 4-1.5S8 21 10 21s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/><path d="M8 13V5a2 2 0 0 1 4 0M16 13V5a2 2 0 0 0-4 0M8 9h8"/>',
-  techo: '<path d="M2 12 12 4l10 8"/><path d="M6 10v10h12V10"/><path d="M12 13v3"/><circle cx="12" cy="18.5" r=".6"/>',
-};
-const icono = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONOS[k] || ICONOS.casa}</svg>`;
 const flecha = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
 const servicioHtml = (s, i) => `
         <article class="svc${i === 0 ? ' is-on' : ''}" data-reveal style="--d:${i * 70}ms">
-          <div class="svc__top"><span class="svc__num">${pad(i + 1)}</span><span class="svc__ico">${icono(s.icono)}</span></div>
+          <div class="svc__top"><span class="svc__num">${pad(i + 1)}</span><span class="svc__ico">${iconoSvg(s.icono)}</span></div>
           <h3>${esc(s.nombre)}</h3>
           <p>${esc(s.texto)}</p>
-          <a class="svc__link" target="_blank" rel="noopener" href="${esc(wa(`Hola GADB 👋 Quiero cotizar: *${s.palabra}*`))}">Cotizar ${esc(s.nombre.toLowerCase())} ${flecha}</a>
+          <a class="svc__link" target="_blank" rel="noopener" href="${esc(wa(s.mensaje))}">Cotizar ${esc(s.nombre.toLowerCase())} ${flecha}</a>${proyectosPor[s.id] ? `
+          <a class="svc__prj" href="#proyectos" data-tipo="${esc(s.id)}">Ver ${proyectosPor[s.id]} ${proyectosPor[s.id] === 1 ? 'proyecto' : 'proyectos'}</a>` : ''}
         </article>`;
 
 const proyectoHtml = (p, i) => `
@@ -255,6 +256,8 @@ const VARS = {
   TESTIMONIOS: testimonios.length ? '1' : '', CLIENTES: T.clientes.length ? '1' : '',
   FUENTES_URL: `https://fonts.googleapis.com/css2?${fuenteParam(FUENTE_TITULOS, '500;600;700;800')}&${fuenteParam(FUENTE_TEXTO, '400;500;600;700')}&display=swap`,
   FUENTE_TITULOS, FUENTE_TEXTO,
+  ICONOS_OPCIONES: Object.entries(ICONOS).map(([value, i]) => `
+          - { label: ${JSON.stringify(i.nombre)}, value: ${value} }`).join(''),
   GITHUB_REPO: str(config.github_repo), SITE_URL: `${SITE}/`, ANIO: String(new Date().getFullYear()),
   COLOR_ACENTO: colores.acento, COLOR_ACENTO_OSCURO: colores.acento_oscuro, COLOR_TINTA: colores.tinta,
   COLOR_GRAFITO: colores.grafito, COLOR_FONDO: colores.fondo, COLOR_PAPEL: colores.papel, COLOR_LINEA: colores.linea,
@@ -352,6 +355,16 @@ writeFileSync(join(DIST, 'index.html'), html);
 writeFileSync(join(DIST, 'styles.css'), css);
 writeFileSync(join(DIST, 'app.js'), js);
 writeFileSync(join(DIST, 'admin', 'config.yml'), render(readFileSync(join(ROOT, 'admin', 'config.yml'), 'utf8'), 'admin/config.yml', false));
+
+// Hoja de muestra de íconos para el cliente: /admin/iconos.html
+writeFileSync(join(DIST, 'admin', 'iconos.html'), `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Íconos disponibles · ${esc(T.nombre)}</title>
+<style>body{margin:0;padding:24px;font:15px/1.4 system-ui,sans-serif;background:#f1eee8;color:#181917}h1{font-size:22px;margin:0 0 6px}p{margin:0 0 20px;color:#555}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.i{background:#fff;border:1px solid #dcd6cc;border-radius:6px;padding:16px;text-align:center}
+.i svg{width:40px;height:40px;fill:none;stroke:#181917;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.i b{display:block;margin-top:10px;font-size:14px}.i code{font-size:12px;color:#8a6a1a}</style></head>
+<body><h1>Íconos para los servicios</h1><p>En /admin → Servicios → «Ícono», elige el que tenga el mismo nombre.</p><div class="g">${Object.entries(ICONOS).map(([k, i]) => `<div class="i">${iconoSvg(k)}<b>${esc(i.nombre)}</b><code>${k}</code></div>`).join('')}</div></body></html>
+`);
 
 writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE}/sitemap.xml\n`);
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>

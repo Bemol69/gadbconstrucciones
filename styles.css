@@ -448,3 +448,9 @@ p { margin: 0; }
   .nav__burger span:first-child { top: 16px; } .nav__burger span:last-child { top: 24px; }
   .hero__title { font-size: 42px; }
 }
+
+/* Servicio: link a sus proyectos */
+.svc__prj { align-self: flex-start; display: inline-flex; align-items: center; min-height: 36px; margin-top: 2px; font: 600 12px/1 var(--f-title); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: underline; text-underline-offset: 4px; transition: color .25s; }
+.svc__prj:hover { color: var(--ink); }
+.svc.is-on .svc__prj { color: #bdbbb4; }
+.svc.is-on .svc__prj:hover { color: #fff; }

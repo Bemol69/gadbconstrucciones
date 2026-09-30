@@ -122,8 +122,10 @@
     toggle.addEventListener('click', (e) => { e.stopPropagation(); abrirDrop(!drop.classList.contains('is-open')); });
     document.addEventListener('click', (e) => { if (!drop.contains(e.target)) abrirDrop(false); });
     addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirDrop(false); });
-    $$('[data-tipo]', drop).forEach((l) => l.addEventListener('click', () => { filtrar(l.dataset.tipo); abrirDrop(false); }));
+    $$('[data-tipo]', drop).forEach((l) => l.addEventListener('click', () => abrirDrop(false)));
   }
+  // Cualquier link con data-tipo (menú o «Ver N proyectos» de un servicio) baja a la galería ya filtrada
+  $$('[data-tipo]').forEach((l) => l.addEventListener('click', () => filtrar(l.dataset.tipo)));
   if (mas) mas.addEventListener('click', () => { todos = true; pintar(); });
 
   // ---------- Galería ----------

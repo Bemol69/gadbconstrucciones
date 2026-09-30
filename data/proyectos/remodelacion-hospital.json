@@ -1,0 +1,15 @@
+{
+  "nombre": "Remodelacion Hospital",
+  "lugar": "Puente Alto",
+  "tipo": "remodelaciones",
+  "anio": "2026",
+  "descripcion": "Remodelacion del hospital",
+  "portada": "/img/proyectos/Captura de pantalla 2026-09-30 181458.webp",
+  "fotos": [
+    "/img/proyectos/sotero 2.webp",
+    "/img/proyectos/Sotero 3.webp"
+  ],
+  "destacado": false,
+  "orden": 1,
+  "visible": true
+}

@@ -1,1 +1,15 @@
-{ "nombre": "Casa Piedra y Jardín", "lugar": "Coquimbo", "categoria": "Casas", "anio": "2025", "descripcion": "Casa de un piso con muro de piedra, acceso en porcelanato, jardín y portón de fierro a la medida.", "portada": "img/proyectos/piedra-1.jpg", "fotos": ["img/proyectos/piedra-2.jpg", "img/proyectos/piedra-3.jpg", "img/proyectos/piedra-4.jpg"], "destacado": true, "orden": 3 }
+{
+  "nombre": "Casa Piedra y Jardín",
+  "lugar": "Coquimbo",
+  "tipo": "casas",
+  "anio": "2025",
+  "descripcion": "Casa de un piso con muro de piedra, acceso en porcelanato, jardín y portón de fierro a la medida.",
+  "portada": "img/proyectos/piedra-1.jpg",
+  "fotos": [
+    "img/proyectos/piedra-2.jpg",
+    "img/proyectos/piedra-3.jpg",
+    "img/proyectos/piedra-4.jpg"
+  ],
+  "destacado": true,
+  "orden": 3
+}

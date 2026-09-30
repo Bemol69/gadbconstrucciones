@@ -1,1 +1,15 @@
-{ "nombre": "Piscinas y bordes", "lugar": "La Serena · Coquimbo", "categoria": "Exteriores", "anio": "2026", "descripcion": "Construcción de piscinas, bordes en piedra gris, pisos y revestimientos exteriores.", "portada": "img/proyectos/piscina-1.jpg", "fotos": ["img/proyectos/piscina-noche.jpg", "img/proyectos/piscina-2.jpg", "img/proyectos/piscina-3.jpg"], "destacado": false, "orden": 4 }
+{
+  "nombre": "Piscinas y bordes",
+  "lugar": "La Serena · Coquimbo",
+  "tipo": "exteriores",
+  "anio": "2026",
+  "descripcion": "Construcción de piscinas, bordes en piedra gris, pisos y revestimientos exteriores.",
+  "portada": "img/proyectos/piscina-1.jpg",
+  "fotos": [
+    "img/proyectos/piscina-noche.jpg",
+    "img/proyectos/piscina-2.jpg",
+    "img/proyectos/piscina-3.jpg"
+  ],
+  "destacado": false,
+  "orden": 4
+}

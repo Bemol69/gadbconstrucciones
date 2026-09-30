@@ -1,1 +1,15 @@
-{ "nombre": "Módulos container", "lugar": "Coquimbo · para Recamin", "categoria": "Remodelaciones", "anio": "2022", "descripcion": "Habilitación de módulos container estilo mediterráneo: pisos, revestimientos e instalaciones.", "portada": "img/proyectos/modulares-1.jpg", "fotos": ["img/proyectos/modulares-2.jpg", "img/proyectos/modulares-3.jpg", "img/proyectos/modulares-4.jpg"], "destacado": false, "orden": 8 }
+{
+  "nombre": "Módulos container",
+  "lugar": "Coquimbo · para Recamin",
+  "tipo": "remodelaciones",
+  "anio": "2022",
+  "descripcion": "Habilitación de módulos container estilo mediterráneo: pisos, revestimientos e instalaciones.",
+  "portada": "img/proyectos/modulares-1.jpg",
+  "fotos": [
+    "img/proyectos/modulares-2.jpg",
+    "img/proyectos/modulares-3.jpg",
+    "img/proyectos/modulares-4.jpg"
+  ],
+  "destacado": false,
+  "orden": 8
+}

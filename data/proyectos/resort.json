@@ -1,1 +1,14 @@
-{ "nombre": "Losas Rosa Agustina Resort", "lugar": "Guanaqueros", "categoria": "Obras mayores", "anio": "2023", "descripcion": "Enfierradura y hormigonado de losas para el resort Rosa Agustina, con apoyo de helicóptero de construcción.", "portada": "img/proyectos/resort-1.jpg", "fotos": ["img/proyectos/resort-2.jpg", "img/proyectos/resort-3.jpg"], "destacado": false, "orden": 10 }
+{
+  "nombre": "Losas Rosa Agustina Resort",
+  "lugar": "Guanaqueros",
+  "tipo": "obras-mayores",
+  "anio": "2023",
+  "descripcion": "Enfierradura y hormigonado de losas para el resort Rosa Agustina, con apoyo de helicóptero de construcción.",
+  "portada": "img/proyectos/resort-1.jpg",
+  "fotos": [
+    "img/proyectos/resort-2.jpg",
+    "img/proyectos/resort-3.jpg"
+  ],
+  "destacado": false,
+  "orden": 10
+}

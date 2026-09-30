@@ -122,11 +122,27 @@ const servicios = readFolder('servicios').filter(conNombre).map((s) => ({
   orden: num(s.orden, 1000),
 })).sort(byOrder);
 
+// Tipos de proyecto (data/tipos, editables en /admin): son los filtros de la galería
+const tipos = readFolder('tipos').filter(conNombre).map((t) => ({
+  id: t.id,
+  nombre: t.nombre.trim(),
+  orden: num(t.orden, 1000),
+})).sort(byOrder);
+const normTipo = (s) => str(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+// El proyecto guarda el identificador del tipo; también se acepta el nombre (datos antiguos o escritos a mano)
+function tipoDe(p) {
+  const v = str(p.tipo) || str(p.categoria);
+  const t = tipos.find((x) => x.id === v) || tipos.find((x) => normTipo(x.nombre) === normTipo(v));
+  if (t) return t;
+  console.warn(`⚠️  Proyecto «${str(p.nombre)}»: el tipo «${v || '(vacío)'}» no existe o está oculto, se muestra como «Proyectos»`);
+  return { id: 'otros', nombre: 'Proyectos', orden: 9999 };
+}
+
 const proyectos = readFolder('proyectos').filter(conNombre).map((p) => ({
   id: p.id,
   nombre: p.nombre.trim(),
   lugar: str(p.lugar),
-  categoria: str(p.categoria) || 'Proyectos',
+  tipo: tipoDe(p),
   anio: str(p.anio),
   descripcion: str(p.descripcion),
   portada: rel(p.portada) || 'img/logo.jpg',
@@ -149,8 +165,10 @@ const cifras = (Array.isArray(ajustes.cifras) ? ajustes.cifras : [])
   .map((c) => ({ numero: Math.max(0, Math.round(num(c && c.numero, 0))), prefijo: str(c && c.prefijo), sufijo: str(c && c.sufijo), texto: str(c && c.texto) }))
   .filter((c) => c.texto).slice(0, 4);
 
-const categorias = [...new Set(proyectos.map((p) => p.categoria))];
-console.log(`✅ datos: ${servicios.length} servicios, ${proyectos.length} proyectos, ${etapas.length} etapas, ${testimonios.length} testimonios`);
+// Filtros: solo los tipos que tienen al menos un proyecto visible, en el orden elegido en /admin
+const usados = new Map(proyectos.map((p) => [p.tipo.id, p.tipo]));
+const categorias = [...usados.values()].sort(byOrder);
+console.log(`✅ datos: ${servicios.length} servicios, ${tipos.length} tipos, ${proyectos.length} proyectos, ${etapas.length} etapas, ${testimonios.length} testimonios`);
 
 // ---------- 2. HTML de las secciones ----------
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -179,10 +197,10 @@ const servicioHtml = (s, i) => `
         </article>`;
 
 const proyectoHtml = (p, i) => `
-        <article class="prj${i === 0 ? ' is-big' : ''}${i >= 6 ? ' is-extra' : ''}" data-cat="${esc(p.categoria)}" data-reveal>
+        <article class="prj${i === 0 ? ' is-big' : ''}${i >= 6 ? ' is-extra' : ''}" data-cat="${esc(p.tipo.id)}" data-reveal>
           <button type="button" class="prj__btn" data-proyecto="${esc(p.id)}" aria-label="Ver fotos de ${esc(p.nombre)}">
             <img src="${esc(p.mini)}" alt="${esc(`${p.nombre} · ${p.lugar}`)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async">
-            <span class="prj__tag">${esc(p.categoria)}${p.anio ? ` · ${esc(p.anio)}` : ''}</span>
+            <span class="prj__tag">${esc(p.tipo.nombre)}${p.anio ? ` · ${esc(p.anio)}` : ''}</span>
             ${p.galeria.length > 1 ? `<span class="prj__count">${p.galeria.length} fotos</span>` : ''}
             <span class="prj__info">
               <strong>${esc(p.nombre)}</strong>
@@ -205,8 +223,8 @@ const testimonioHtml = (t, i) => `
           <figcaption><strong>${esc(t.nombre)}</strong>${t.detalle ? `<span>${esc(t.detalle)}</span>` : ''}</figcaption>
         </figure>`;
 
-const filtrosHtml = ['Todos', ...categorias].map((c, i) =>
-  `<button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-filtro="${esc(i === 0 ? '*' : c)}">${esc(c)}</button>`).join('');
+const filtrosHtml = [{ id: '*', nombre: 'Todos' }, ...categorias].map((c, i) =>
+  `<button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-filtro="${esc(c.id)}">${esc(c.nombre)}</button>`).join('');
 
 // ---------- 3. Marcadores ----------
 const colores = config.colores || {};

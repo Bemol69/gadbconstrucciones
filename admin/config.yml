@@ -38,6 +38,43 @@ media_libraries:
           height: 1800
 
 collections:
+  # ---------- TIPOS DE PROYECTO (catálogo: filtros de la galería) ----------
+  - name: tipos
+    label: Tipos de proyecto
+    label_singular: tipo de proyecto
+    description: "El catálogo de tipos (Casas, Quinchos, Remodelaciones…). Aparecen en la lista «Tipo de proyecto» de cada proyecto y como filtros de la galería. Un tipo sin proyectos no se muestra en la web."
+    icon: category
+    folder: data/tipos
+    format: json
+    create: true
+    delete: true
+    identifier_field: nombre
+    slug: "{{nombre}}"
+    summary: "{{nombre}}"
+    sortable_fields:
+      fields: [orden, nombre]
+      default:
+        field: orden
+        direction: ascending
+    fields:
+      - name: nombre
+        label: Nombre del tipo
+        hint: "Corto y en plural. Ej: Casas, Quinchos, Remodelaciones, Piscinas"
+        widget: string
+      - name: orden
+        label: Orden en los filtros
+        hint: "Número más bajo = aparece antes. Ej: 1, 2, 3…"
+        widget: number
+        value_type: int
+        default: 10
+        required: false
+      - name: visible
+        label: ¿Mostrar en la web?
+        hint: "Apágalo para ocultar el filtro. Sus proyectos quedan como «Proyectos» hasta que les cambies el tipo."
+        widget: boolean
+        default: true
+        required: false
+
   # ---------- PROYECTOS (galería de trabajos) ----------
   - name: proyectos
     label: Proyectos
@@ -66,11 +103,15 @@ collections:
         hint: "Ej: La Herradura, Coquimbo"
         widget: string
         required: false
-      - name: categoria
+      - name: tipo
         label: Tipo de proyecto
-        hint: "Se usa para los filtros. Escribe siempre igual los mismos tipos (ej: Casas, Quinchos, Exteriores, Remodelaciones, Obras mayores)."
-        widget: string
-        default: Casas
+        hint: "Elige de la lista. Para agregar un tipo nuevo (ej: Piscinas), créalo primero en «Tipos de proyecto»."
+        widget: relation
+        collection: tipos
+        value_field: "{{slug}}"
+        search_fields: [nombre]
+        display_fields: [nombre]
+        options_length: 50
       - name: anio
         label: Año
         hint: "Ej: 2026"

@@ -1,1 +1,11 @@
-{ "nombre": "10 cabañas y piscina", "lugar": "Cochiguaz, Valle del Elqui", "categoria": "Casas", "anio": "2018", "descripcion": "Complejo turístico de 10 cabañas con piscina en pleno Valle del Elqui. Proyecto entregado.", "portada": "img/proyectos/cochiguaz-1.jpg", "fotos": [], "destacado": false, "orden": 7 }
+{
+  "nombre": "10 cabañas y piscina",
+  "lugar": "Cochiguaz, Valle del Elqui",
+  "tipo": "casas",
+  "anio": "2018",
+  "descripcion": "Complejo turístico de 10 cabañas con piscina en pleno Valle del Elqui. Proyecto entregado.",
+  "portada": "img/proyectos/cochiguaz-1.jpg",
+  "fotos": [],
+  "destacado": false,
+  "orden": 7
+}

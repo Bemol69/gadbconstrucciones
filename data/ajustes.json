@@ -5,8 +5,15 @@
   "email": "gadbconstrucciones@gmail.com",
   "ciudad": "Coquimbo",
   "region": "Región de Coquimbo",
-  "zonas": ["La Serena", "Coquimbo", "La Herradura", "Guanaqueros", "Valle del Elqui", "Tongoy"],
-  "horario": "Lunes a sábado · 9:00 a 19:00",
+  "zonas": [
+    "La Serena",
+    "Coquimbo",
+    "La Herradura",
+    "Guanaqueros",
+    "Valle del Elqui",
+    "Tongoy"
+  ],
+  "horario": "Lunes a domingo · 9:00 a 19:00",
   "hero_eyebrow": "Empresa constructora · La Serena | Coquimbo",
   "hero_titulo": "Construimos tus ideas.",
   "hero_destacado": "Hacemos realidad tu proyecto.",
@@ -15,10 +22,37 @@
   "hero_foto_titulo": "Casa Piedra y Jardín",
   "hero_foto_lugar": "Coquimbo · obra entregada",
   "cifras": [
-    { "numero": 8, "prefijo": "+", "sufijo": "", "texto": "años construyendo en la Región de Coquimbo" },
-    { "numero": 60, "prefijo": "", "sufijo": "", "texto": "casas en condominio para Inmobiliaria Kupal" },
-    { "numero": 130, "prefijo": "+", "sufijo": "", "texto": "trabajos publicados, de la obra gruesa a la entrega" },
-    { "numero": 100, "prefijo": "", "sufijo": "%", "texto": "mano de obra propia y garantizada" }
+    {
+      "prefijo": "+",
+      "numero": 8,
+      "sufijo": "",
+      "texto": "años construyendo en la Región de Coquimbo"
+    },
+    {
+      "prefijo": "",
+      "numero": 60,
+      "sufijo": "",
+      "texto": "casas en condominio para Inmobiliaria Kupal"
+    },
+    {
+      "prefijo": "+",
+      "numero": 130,
+      "sufijo": "",
+      "texto": "trabajos publicados, de la obra gruesa a la entrega"
+    },
+    {
+      "prefijo": "",
+      "numero": 100,
+      "sufijo": "%",
+      "texto": "mano de obra propia y garantizada"
+    }
   ],
-  "clientes": ["Inmobiliaria Kupal", "Rosa Agustina Resort", "Recamin", "Condominio Tres Mares", "Cumbres del Sauce II", "Librería Bahé"]
+  "clientes": [
+    "Inmobiliaria Kupal",
+    "Rosa Agustina Resort",
+    "Recamin",
+    "Condominio Tres Mares",
+    "Cumbres del Sauce II",
+    "Librería Bahé"
+  ]
 }

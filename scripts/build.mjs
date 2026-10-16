@@ -44,7 +44,7 @@ function optimizar(src, ancho) {
         const buf = readFileSync(join(ROOT, path));
         const out = `${OPT}/${createHash('sha1').update(buf).digest('hex').slice(0, 12)}-${ancho}.webp`;
         mkdirSync(join(DIST, OPT), { recursive: true });
-        await sharp(buf).rotate().resize({ width: ancho, withoutEnlargement: true }).webp({ quality: 76 }).toFile(join(DIST, out));
+        await sharp(buf).rotate().resize({ width: ancho, withoutEnlargement: true }).webp({ quality: 72, effort: 5 }).toFile(join(DIST, out));
         return out;
       } catch (e) {
         console.warn(`⚠️  No se pudo optimizar ${path}: ${e.message}`);
@@ -162,8 +162,14 @@ const proyectos = readFolder('proyectos').filter(conNombre).map((p) => ({
 
 // Tarjetas con foto chica; la galería usa una versión grande (1600 px)
 await Promise.all(proyectos.map(async (p, i) => {
-  p.mini = await optimizar(p.portada, i === 0 ? 1400 : 800);
-  const todas = [p.portada, ...p.fotos];
+  // Tarjeta: dos tamaños (srcset) para que el celular no descargue la versión de escritorio
+  const [chica, grande] = i === 0 ? [800, 1400] : [480, 800];
+  p.mini = await optimizar(p.portada, grande);
+  p.miniChica = await optimizar(p.portada, chica);
+  p.srcset = p.mini === p.miniChica ? '' : `${p.miniChica} ${chica}w, ${p.mini} ${grande}w`;
+  p.sizes = i === 0 ? '(max-width: 960px) 100vw, 800px' : '(max-width: 600px) 100vw, (max-width: 960px) 50vw, 400px';
+  // Sin fotos repetidas (en /admin a veces se agrega la portada también en la galería)
+  const todas = [...new Set([p.portada, ...p.fotos].map(rel))];
   p.galeria = await Promise.all(todas.map((f) => optimizar(f, 1600)));
   p.galeriaMovil = await Promise.all(todas.map((f) => optimizar(f, 1000))); // celulares: carga más rápido
   p.miniaturas = await Promise.all(todas.map((f) => optimizar(f, 240)));
@@ -203,7 +209,7 @@ const servicioHtml = (s, i) => `
 const proyectoHtml = (p, i) => `
         <article class="prj${i === 0 ? ' is-big' : ''}${i >= 6 ? ' is-extra' : ''}" data-cat="${esc(p.tipo.id)}" data-reveal>
           <button type="button" class="prj__btn" data-proyecto="${esc(p.id)}" aria-label="Ver fotos de ${esc(p.nombre)}">
-            <img src="${esc(p.mini)}" alt="${esc(`${p.nombre} · ${p.lugar}`)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async">
+            <img src="${esc(p.mini)}"${p.srcset ? ` srcset="${esc(p.srcset)}" sizes="${p.sizes}"` : ''} alt="${esc(`${p.nombre} · ${p.lugar}`)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async">
             <span class="prj__tag">${esc(p.tipo.nombre)}${p.anio ? ` · ${esc(p.anio)}` : ''}</span>
             ${p.galeria.length > 1 ? `<span class="prj__count">${p.galeria.length} fotos</span>` : ''}
             <span class="prj__info">
@@ -286,7 +292,15 @@ function render(text, file, escape) {
 }
 
 // ---------- 4. SEO ----------
-const OG_IMAGE = abs(heroFoto);
+// Imagen para compartir en WhatsApp/Facebook: 1200x630 en JPG (el formato que todos aceptan)
+let OG_IMAGE = abs(heroFoto);
+if (sharp && existsSync(join(ROOT, heroFoto))) {
+  try {
+    mkdirSync(join(DIST, 'img'), { recursive: true });
+    await sharp(readFileSync(join(ROOT, heroFoto))).rotate().resize(1200, 630, { fit: 'cover', position: 'attention' }).jpeg({ quality: 80, mozjpeg: true }).toFile(join(DIST, 'img', 'og.jpg'));
+    OG_IMAGE = abs('img/og.jpg');
+  } catch (e) { console.warn(`⚠️  No se pudo crear la imagen para compartir: ${e.message}`); }
+}
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': str(config.schema_tipo) || 'GeneralContractor',
@@ -317,6 +331,9 @@ const head = `<link rel="canonical" href="${SITE}/">
   <meta property="og:title" content="${esc(SEO_TITULO)}">
   <meta property="og:description" content="${esc(SEO_DESCRIPCION)}">
   <meta property="og:image" content="${OG_IMAGE}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${esc(T.nombre)}">
   <meta name="twitter:card" content="summary_large_image">${config.google_verificacion
     ? `\n  <meta name="google-site-verification" content="${esc(config.google_verificacion)}">` : ''}
   <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`;
@@ -343,6 +360,17 @@ html = render(html, 'index.html', true).replace(/<!-- SEO:HEAD[^>]*-->/, head);
 for (const [marker, contenido] of Object.entries(BLOQUES)) html = html.replaceAll(marker, contenido);
 
 cpSync(join(ROOT, 'img'), join(DIST, 'img'), { recursive: true });
+// favicon.ico (Google y algunos navegadores lo buscan en la raíz): ICO con un PNG adentro
+if (sharp && existsSync(join(ROOT, 'img', 'logo.jpg'))) {
+  const png = await sharp(join(ROOT, 'img', 'logo.jpg')).resize(48, 48).png().toBuffer();
+  const ico = Buffer.alloc(22);
+  ico.writeUInt16LE(0, 0); ico.writeUInt16LE(1, 2); ico.writeUInt16LE(1, 4); // cabecera: 1 imagen
+  ico.writeUInt8(48, 6); ico.writeUInt8(48, 7); ico.writeUInt16LE(1, 10); ico.writeUInt16LE(32, 12);
+  ico.writeUInt32LE(png.length, 14); ico.writeUInt32LE(22, 18);
+  writeFileSync(join(DIST, 'favicon.ico'), Buffer.concat([ico, png]));
+}
+// Página 404 con la marca (Vercel la usa sola si existe 404.html)
+if (existsSync(join(ROOT, '404.html'))) writeFileSync(join(DIST, '404.html'), render(readFileSync(join(ROOT, '404.html'), 'utf8'), '404.html', true));
 cpSync(join(ROOT, 'admin'), join(DIST, 'admin'), { recursive: true });
 // styles.css y app.js llevan ?v=hash: se guardan en caché y cada cambio publicado se descarga de nuevo
 const css = render(readFileSync(join(ROOT, 'styles.css'), 'utf8'), 'styles.css', false);

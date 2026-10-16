@@ -33,9 +33,9 @@ media_libraries:
       transformations:
         raster_image:
           format: webp
-          quality: 85
-          width: 1800
-          height: 1800
+          quality: 80
+          width: 1600
+          height: 1600
 
 collections:
   # ---------- SERVICIOS (también son los tipos de proyecto) ----------

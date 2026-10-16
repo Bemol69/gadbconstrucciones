@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Página no encontrada · %%NOMBRE%%</title>
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <link rel="stylesheet" href="%%FUENTES_URL%%">
+  <style>
+    body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: %%COLOR_FONDO%%; color: %%COLOR_TINTA%%; font: 400 16px/1.6 '%%FUENTE_TEXTO%%', system-ui, sans-serif; text-align: center; }
+    main { max-width: 520px; }
+    img { width: 72px; height: 72px; border-radius: 4px; }
+    h1 { font: 800 clamp(40px, 9vw, 72px)/.95 '%%FUENTE_TITULOS%%', 'Arial Narrow', sans-serif; text-transform: uppercase; margin: 22px 0 12px; }
+    h1 span { color: %%COLOR_ACENTO_OSCURO%%; }
+    p { color: #6b6a64; margin: 0 0 28px; }
+    a { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; margin: 4px; border-radius: 4px; text-decoration: none; font: 700 15px/1 '%%FUENTE_TITULOS%%', sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+    .a { background: %%COLOR_TINTA%%; color: #fff; } .b { background: %%COLOR_ACENTO%%; color: %%COLOR_TINTA%%; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/img/logo.jpg" alt="%%NOMBRE%%">
+    <h1>Esta página <span>no existe.</span></h1>
+    <p>Puede que el link esté mal escrito o que la página se haya movido.</p>
+    <a class="a" href="/">Volver al inicio</a>
+    <a class="b" href="%%WA_LINK%%" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+  </main>
+</body>
+</html>

@@ -65,14 +65,9 @@ collections:
         label: Descripción
         hint: "Una o dos frases. Ej: Quinchos en madera con parrilla, barra y mesón de albañilería."
         widget: text
-      - name: palabra
-        label: Palabra para el WhatsApp
-        hint: "Una o dos palabras que llegan en negrita: «Hola GADB 👋 Quiero cotizar: *QUINCHO*». Ej: QUINCHO"
-        widget: string
-        required: false
       - name: mensaje
-        label: Mensaje de WhatsApp completo (opcional)
-        hint: "Si lo llenas, se envía este texto en vez del mensaje con la palabra. Ej: Hola, quiero cotizar una fosa."
+        label: Mensaje de WhatsApp (opcional)
+        hint: "Lo que aparece escrito cuando el cliente toca «Cotizar» en este servicio. Escríbelo como lo diría el cliente. Ej: Hola, buenas 👋 Vi su página web y me gustaría hacer un quincho. ¿Me podrían cotizar? Si lo dejas vacío se usa uno general con el nombre del servicio."
         widget: string
         required: false
       - name: icono
@@ -188,7 +183,7 @@ collections:
             pattern: ["^569\\d{8}$", "Debe partir con 569 y tener 11 números, ej: 56912345678"]
           - name: mensaje_whatsapp
             label: Mensaje inicial de WhatsApp
-            hint: "Lo que aparece escrito cuando el cliente toca «Cotizar». Ej: Hola GADB 👋 Quiero cotizar un proyecto."
+            hint: "Lo que aparece escrito cuando el cliente toca «Cotizar». Ej: Hola, buenas 👋 Vi su página web y me gustaría cotizar un proyecto. ¿Me podrían orientar?"
             widget: string
           - name: instagram
             label: Usuario de Instagram

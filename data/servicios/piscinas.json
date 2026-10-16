@@ -1,1 +1,7 @@
-{ "nombre": "Piscinas y exteriores", "texto": "Piscinas, bordes, pisos exteriores y revestimientos para que disfrutes el patio todo el verano.", "palabra": "PISCINA", "icono": "piscina", "orden": 5 }
+{
+  "nombre": "Piscinas y exteriores",
+  "texto": "Piscinas, bordes, pisos exteriores y revestimientos para que disfrutes el patio todo el verano.",
+  "icono": "piscina",
+  "orden": 5,
+  "mensaje": "Hola, buenas 👋 Vi su página web y me interesa hacer una piscina o arreglar el patio. ¿Me podrían cotizar?"
+}

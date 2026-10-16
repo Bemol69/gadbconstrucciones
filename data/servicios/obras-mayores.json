@@ -1,8 +1,8 @@
 {
   "nombre": "Obras mayores",
   "texto": "Condominios, losas y obras para empresas e inmobiliarias: equipo y mano de obra para proyectos grandes.",
-  "palabra": "OBRA MAYOR",
   "icono": "edificio",
   "orden": 7,
-  "visible": true
+  "visible": true,
+  "mensaje": "Hola, buenas 👋 Les escribo desde su página web por un proyecto de mayor tamaño. ¿Podemos conversar para cotizarlo?"
 }

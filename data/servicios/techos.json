@@ -1,1 +1,7 @@
-{ "nombre": "Techos y mantención", "texto": "Reparación de techos y filtraciones, limpieza de techumbres, pintura y mantención general.", "palabra": "TECHO", "icono": "techo", "orden": 6 }
+{
+  "nombre": "Techos y mantención",
+  "texto": "Reparación de techos y filtraciones, limpieza de techumbres, pintura y mantención general.",
+  "icono": "techo",
+  "orden": 6,
+  "mensaje": "Hola, buenas 👋 Vi su página web y necesito reparar o hacerle mantención al techo. ¿Me podrían ayudar con una cotización?"
+}

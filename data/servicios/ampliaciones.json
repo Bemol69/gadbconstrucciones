@@ -1,1 +1,7 @@
-{ "nombre": "Ampliaciones", "texto": "Más metros para tu casa: dormitorios, segundo piso, terrazas y cierres, integrados a lo que ya tienes.", "palabra": "AMPLIACIÓN", "icono": "ampliacion", "orden": 3 }
+{
+  "nombre": "Ampliaciones",
+  "texto": "Más metros para tu casa: dormitorios, segundo piso, terrazas y cierres, integrados a lo que ya tienes.",
+  "icono": "ampliacion",
+  "orden": 3,
+  "mensaje": "Hola, buenas 👋 Vi su página web y quiero ampliar mi casa. ¿Me podrían orientar con una cotización?"
+}

@@ -79,7 +79,7 @@ const T = {
   lema: str(config.lema),
   rubro: str(config.rubro),
   whatsapp: str(ajustes.whatsapp).replace(/\D/g, ''),
-  mensaje: str(ajustes.mensaje_whatsapp) || 'Hola! Quiero cotizar un proyecto.',
+  mensaje: str(ajustes.mensaje_whatsapp) || 'Hola, buenas 👋 Vi su página web y me gustaría cotizar un proyecto. ¿Me podrían orientar?',
   instagram: str(ajustes.instagram).replace(/^@/, ''),
   email: str(ajustes.email),
   ciudad: str(ajustes.ciudad),
@@ -128,7 +128,7 @@ const servicios = readFolder('servicios').filter(conNombre).map((s) => {
     id: s.id,
     nombre,
     texto: str(s.texto),
-    mensaje: mensaje || `Hola GADB 👋 Quiero cotizar: *${palabra || nombre.toUpperCase()}*`,
+    mensaje: mensaje || `Hola, buenas 👋 Vi su página web y me interesa cotizar *${palabra || nombre}*. ¿Me podrían dar más información?`,
     icono: ICONOS[icono] ? icono : 'casa',
     orden: num(s.orden, 1000),
   };

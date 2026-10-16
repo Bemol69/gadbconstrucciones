@@ -165,7 +165,7 @@
     $('#lb-title').textContent = actual.n;
     $('#lb-place').textContent = actual.l;
     $('#lb-desc').textContent = actual.d;
-    $('#lb-wa').href = wa(`Hola GADB 👋 Vi el proyecto *${actual.n}* en su web y quiero cotizar algo parecido.`);
+    $('#lb-wa').href = wa(`Hola, buenas 👋 Vi en su página web el proyecto *${actual.n}*${actual.l ? ` (${actual.l})` : ''} y me gustaría hacer algo parecido. ¿Me podrían cotizar?`);
     const th = $('#lb-thumbs');
     th.innerHTML = '';
     if (actual.f.length > 1) {
@@ -224,14 +224,14 @@
     if (bad) { form.elements[req.find((k) => !String(d[k] || '').trim())].focus(); return; }
     const t = (v) => String(v || '').trim();
     const lineas = [
-      'Hola GADB Construcciones 👋 Quiero cotizar un proyecto.',
+      `Hola, buenas 👋 Soy ${t(d.nombre)} y les escribo desde su página web para cotizar un proyecto.`,
       '',
       `🏗️ *Proyecto:* ${t(d.tipo)}`,
       `📍 *Comuna:* ${t(d.comuna)}`,
       t(d.medidas) ? `📐 *Medidas aprox.:* ${t(d.medidas)}` : null,
-      t(d.mensaje) ? `📝 *Idea:* ${t(d.mensaje)}` : null,
+      t(d.mensaje) ? `📝 *Lo que tengo en mente:* ${t(d.mensaje)}` : null,
       '',
-      `Mi nombre es ${t(d.nombre)}.`,
+      '¿Me podrían orientar con los siguientes pasos? ¡Gracias!',
     ].filter((l) => l !== null); // los campos opcionales vacíos no se envían
     window.open(wa(lineas.join('\n').replace(/\n{3,}/g, '\n\n')), '_blank', 'noopener');
   });

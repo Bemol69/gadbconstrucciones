@@ -1,1 +1,7 @@
-{ "nombre": "Quinchos", "texto": "Quinchos en madera con parrilla, barra y mesón de albañilería. Espacios para compartir en familia.", "palabra": "QUINCHO", "icono": "quincho", "orden": 2 }
+{
+  "nombre": "Quinchos",
+  "texto": "Quinchos en madera con parrilla, barra y mesón de albañilería. Espacios para compartir en familia.",
+  "icono": "quincho",
+  "orden": 2,
+  "mensaje": "Hola, buenas 👋 Vi su página web y me gustaría hacer un quincho. ¿Me podrían cotizar?"
+}

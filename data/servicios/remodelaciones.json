@@ -1,1 +1,7 @@
-{ "nombre": "Remodelaciones", "texto": "Remodelación interior y exterior: pisos, pintura, cocinas, baños y fachadas. Cambios completos sin dolores de cabeza.", "palabra": "REMODELACIÓN", "icono": "remodelacion", "orden": 4 }
+{
+  "nombre": "Remodelaciones",
+  "texto": "Remodelación interior y exterior: pisos, pintura, cocinas, baños y fachadas. Cambios completos sin dolores de cabeza.",
+  "icono": "remodelacion",
+  "orden": 4,
+  "mensaje": "Hola, buenas 👋 Vi su página web y estoy pensando en hacer una remodelación. ¿Me podrían cotizar?"
+}

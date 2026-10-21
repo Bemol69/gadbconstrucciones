@@ -1,0 +1,21 @@
+{
+  "nombre": "REMODELACIÓN PROYECTO CASA",
+  "lugar": "Coquimbo",
+  "tipo": "ampliaciones",
+  "anio": "2026",
+  "descripcion": "Proyecto remodelación en casa Coquimbo, Punta mira.",
+  "portada": "/img/proyectos/IMG_3774.webp",
+  "fotos": [
+    "/img/proyectos/IMG_3780.webp",
+    "/img/proyectos/IMG_3783.webp",
+    "/img/proyectos/IMG_3784.webp",
+    "/img/proyectos/IMG_3798.webp",
+    "/img/proyectos/IMG_3806.webp",
+    "/img/proyectos/IMG_3789.webp",
+    "/img/proyectos/IMG_3797.webp",
+    "/img/proyectos/IMG_3808.webp"
+  ],
+  "destacado": false,
+  "orden": 10,
+  "visible": true
+}

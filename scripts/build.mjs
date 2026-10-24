@@ -10,6 +10,7 @@ import { join, basename } from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { ICONOS, iconoSvg } from './iconos.mjs';
+import { PAGINAS, FAQ_HOME } from './paginas-seo.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DATA = join(ROOT, 'data');
@@ -275,15 +276,16 @@ const VARS = {
 };
 
 // Bloques opcionales: <!-- SI:CLAVE --> ... <!-- /SI:CLAVE --> se eliminan si CLAVE está vacía
-function render(text, file, escape) {
+function render(text, file, escape, extra = {}) {
+  const V = { ...VARS, ...extra };
   let out = text;
   for (let prev; prev !== out;) {
     prev = out;
-    out = out.replace(/<!-- SI:([A-Z0-9_]+) -->([\s\S]*?)<!-- \/SI:\1 -->/g, (m, key, body) => (str(VARS[key]) ? body : ''));
+    out = out.replace(/<!-- SI:([A-Z0-9_]+) -->([\s\S]*?)<!-- \/SI:\1 -->/g, (m, key, body) => (str(V[key]) ? body : ''));
   }
   const missing = new Set();
   out = out.replace(/%%([A-Z0-9_]+)%%/g, (m, key) => {
-    const v = VARS[key];
+    const v = V[key];
     if (v === undefined || v === null || (v === '' && key.startsWith('COLOR_'))) { missing.add(key); return m; }
     return escape && key !== 'SITIO_JSON' ? esc(v) : String(v);
   });
@@ -301,6 +303,8 @@ if (sharp && existsSync(join(ROOT, heroFoto))) {
     OG_IMAGE = abs('img/og.jpg');
   } catch (e) { console.warn(`⚠️  No se pudo crear la imagen para compartir: ${e.message}`); }
 }
+const faqLd = (items) => ({ '@type': 'FAQPage', mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+const faqHtml = (items) => items.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('\n          ');
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': str(config.schema_tipo) || 'GeneralContractor',
@@ -313,9 +317,13 @@ const jsonLd = {
   image: [OG_IMAGE, ...proyectos.slice(0, 4).map((p) => abs(p.portada))],
   email: T.email || undefined,
   telephone: `+${T.whatsapp}`,
-  areaServed: T.zonas.map((name) => ({ '@type': 'Place', name })),
+  areaServed: T.zonas.map((name) => ({ '@type': name === 'Valle del Elqui' ? 'AdministrativeArea' : 'City', name })),
+  contactPoint: { '@type': 'ContactPoint', telephone: `+${T.whatsapp}`, contactType: 'customer service', areaServed: 'CL', availableLanguage: 'es' },
+  openingHoursSpecification: config.horario_schema ? { '@type': 'OpeningHoursSpecification', dayOfWeek: config.horario_schema.dias, opens: config.horario_schema.abre, closes: config.horario_schema.cierra } : undefined,
+  knowsAbout: ['Construcción de casas', 'Quinchos', 'Ampliaciones', 'Remodelaciones', 'Piscinas', 'Techos', 'Obras mayores'],
+  hasMap: str(config.google_maps_url) || undefined,
   address: { '@type': 'PostalAddress', addressLocality: T.ciudad, addressRegion: T.region || undefined, addressCountry: 'CL' },
-  sameAs: T.instagram ? [`https://www.instagram.com/${T.instagram}/`] : undefined,
+  sameAs: [...(T.instagram ? [`https://www.instagram.com/${T.instagram}/`] : []), ...lista(config.sameas)],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Servicios',
@@ -336,7 +344,8 @@ const head = `<link rel="canonical" href="${SITE}/">
   <meta property="og:image:alt" content="${esc(T.nombre)}">
   <meta name="twitter:card" content="summary_large_image">${config.google_verificacion
     ? `\n  <meta name="google-site-verification" content="${esc(config.google_verificacion)}">` : ''}
-  <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`;
+  <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
+  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...faqLd(FAQ_HOME) }).replace(/</g, '\\u003c')}</script>`;
 
 // ---------- 5. dist/ ----------
 const BLOQUES = {
@@ -349,6 +358,9 @@ const BLOQUES = {
   '<!-- CIFRAS -->': cifras.map(cifraHtml).join(''),
   '<!-- TESTIMONIOS -->': testimonios.map(testimonioHtml).join(''),
   '<!-- CLIENTES -->': [...T.clientes, ...T.clientes].map((c) => `<span>${esc(c)}</span>`).join(''),
+  '<!-- FAQ_HOME -->': faqHtml(FAQ_HOME),
+  '<!-- PAGINAS_LINKS -->': PAGINAS.map((pg) => `<a href="/${pg.slug}/">${esc(pg.corto)}</a>`).join(' '),
+  '<!-- FOOT_LINKS -->': PAGINAS.map((pg) => `<a href="/${pg.slug}/">${esc(pg.corto)}</a>`).join(' '),
   '<!-- ZONAS -->': T.zonas.map((z) => `<option>${esc(z)}</option>`).join(''),
   '<!-- TIPOS -->': servicios.map((s) => `<option>${esc(s.nombre)}</option>`).join(''),
 };
@@ -394,10 +406,71 @@ writeFileSync(join(DIST, 'admin', 'iconos.html'), `<!DOCTYPE html>
 <body><h1>Íconos para los servicios</h1><p>En /admin → Servicios → «Ícono», elige el que tenga el mismo nombre.</p><div class="g">${Object.entries(ICONOS).map(([k, i]) => `<div class="i">${iconoSvg(k)}<b>${esc(i.nombre)}</b><code>${k}</code></div>`).join('')}</div></body></html>
 `);
 
+// ---------- 6. Páginas locales (/<slug>/) ----------
+const paginaDeServicio = { casas: 'construccion-de-casas-la-serena-coquimbo', quinchos: 'quinchos-la-serena-coquimbo', ampliaciones: 'ampliaciones-remodelaciones-la-serena-coquimbo', remodelaciones: 'ampliaciones-remodelaciones-la-serena-coquimbo' };
+const plantilla = readFileSync(join(ROOT, 'pagina.html'), 'utf8');
+const cssV = version(css);
+const hoy = new Date().toISOString().slice(0, 10);
+for (const pg of PAGINAS) {
+  const url = `${SITE}/${pg.slug}/`;
+  const elegidos = proyectos.filter((p) => (pg.proyectos.lugar ? pg.proyectos.lugar.test(p.lugar) : (pg.proyectos.tipos || []).includes(p.tipo.id))).slice(0, 6);
+  const svcs = servicios.filter((x) => pg.servicios.includes(x.id));
+  const nombreH1 = `${pg.h1} ${pg.h1Destacado}`.replace(/\.$/, '');
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Service', '@id': `${url}#servicio`, name: nombreH1, serviceType: pg.corto, description: pg.description, url, provider: { '@id': `${SITE}/#empresa` },
+        areaServed: [{ '@type': 'City', name: 'La Serena' }, { '@type': 'City', name: 'Coquimbo' }] },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE}/` },
+        { '@type': 'ListItem', position: 2, name: pg.corto, item: url } ] },
+      faqLd(pg.faq),
+    ],
+  };
+  const headPg = `<link rel="canonical" href="${url}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="${esc(T.nombre)}">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:url" content="${url}">
+  <meta property="og:title" content="${esc(pg.title)}">
+  <meta property="og:description" content="${esc(pg.description)}">
+  <meta property="og:image" content="${OG_IMAGE}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">${config.google_verificacion ? `\n  <meta name="google-site-verification" content="${esc(config.google_verificacion)}">` : ''}
+  <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
+  const secciones = pg.secciones.map((sec, i) => `
+    <section class="section${i % 2 ? ' section--paper' : ''}">
+      <div class="wrap"><div class="lp-prose">
+        <h2>${esc(sec.h2)}</h2>
+        ${sec.parrafos.map((t) => `<p>${esc(t)}</p>`).join('\n        ')}${sec.lista ? `
+        <ul>${sec.lista.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+      </div></div>
+    </section>`).join('');
+  const svcHtml = svcs.map((x) => `
+          <article class="lp-svc__item"><h3>${esc(x.nombre)}</h3><p>${esc(x.texto)}</p>${paginaDeServicio[x.id] && paginaDeServicio[x.id] !== pg.slug ? `<p><a href="/${paginaDeServicio[x.id]}/">Ver más sobre ${esc(x.nombre.toLowerCase())}</a></p>` : ''}</article>`).join('');
+  const prjHtml = elegidos.map((p) => `
+          <figure><img src="/${esc(p.miniChica)}" alt="${esc(`${p.nombre} · ${p.lugar}`)}" width="480" height="360" loading="lazy" decoding="async"><figcaption><strong>${esc(p.nombre)}</strong><span>${esc(p.lugar)}</span></figcaption></figure>`).join('');
+  const relHtml = PAGINAS.filter((x) => pg.relacionadas.includes(x.slug)).map((x) => `<a href="/${x.slug}/">${esc(x.corto)}</a>`).join('') + '<a href="/">Inicio</a>';
+  const foto = await optimizar(pg.foto, 1200);
+  const extra = {
+    P_TITLE: pg.title, P_DESCRIPTION: pg.description, P_CORTO: pg.corto, P_EYEBROW: pg.eyebrow, P_H1: pg.h1, P_H1_DESTACADO: pg.h1Destacado, P_LEAD: pg.lead,
+    P_FOTO: `/${foto}`, P_FOTO_ALT: pg.fotoAlt, P_WA: wa(pg.wa), P_TIENE_PROYECTOS: elegidos.length ? '1' : '',
+  };
+  const out = render(plantilla, pg.slug, true, extra).replace('<!-- SEO:HEAD -->', () => headPg)
+    .replace('<!-- P_SERVICIOS -->', () => svcHtml).replace('<!-- P_SECCIONES -->', () => secciones).replace('<!-- P_PROYECTOS -->', () => prjHtml)
+    .replace('<!-- P_FAQ -->', () => faqHtml(pg.faq)).replace('<!-- P_RELACIONADAS -->', () => relHtml)
+    .replace('href="/styles.css"', `href="/styles.css?v=${cssV}"`);
+  mkdirSync(join(DIST, pg.slug), { recursive: true });
+  writeFileSync(join(DIST, pg.slug, 'index.html'), out);
+}
+console.log(`✅ ${PAGINAS.length} páginas locales: ${PAGINAS.map((x) => '/' + x.slug + '/').join(' ')}`);
+
 writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE}/sitemap.xml\n`);
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${SITE}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>
+${PAGINAS.map((pg) => `  <url><loc>${SITE}/${pg.slug}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>`).join('\n')}
 </urlset>
 `);
 

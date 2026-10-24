@@ -467,3 +467,65 @@ p { margin: 0; }
 @media (min-width: 601px) and (max-width: 960px) {
   .svc-grid .svc:last-child:nth-child(2n+1) { grid-column: 1 / -1; }
 }
+
+/* ---------- Páginas de posicionamiento local + preguntas frecuentes ---------- */
+.about__links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 4px 0 22px; }
+.about__links a { color: var(--accent); font: 600 14px/1.4 var(--f-text); text-underline-offset: 4px; }
+.foot__nav { display: flex; flex-wrap: wrap; gap: 4px 20px; flex-basis: 100%; }
+.foot__nav a { color: var(--muted-d); font-size: 14px; text-underline-offset: 4px; padding: 6px 0; }
+.foot__nav a:hover { color: #fff; }
+
+.faq { max-width: 860px; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 0; min-height: 56px; font: 700 clamp(18px, 2.2vw, 22px)/1.25 var(--f-title); letter-spacing: .02em; text-transform: uppercase; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: '+'; flex-shrink: 0; font-size: 28px; line-height: 1; color: var(--accent-d); transition: transform .25s var(--ease); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 44px 22px 0; color: var(--muted); max-width: 70ch; }
+
+.lp-hero { padding: clamp(36px, 6vw, 84px) 0 clamp(40px, 5vw, 72px); }
+.lp-hero__grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.lp-crumbs { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+.lp-crumbs a { text-underline-offset: 3px; }
+.lp-title { font-size: clamp(40px, 6.4vw, 84px); line-height: .94; }
+.lp-title em { font-style: normal; color: var(--accent-d); display: block; }
+.lp-lead { margin: 22px 0 28px; max-width: 56ch; font-size: clamp(17px, 1.6vw, 20px); color: #3d3c37; }
+.lp-photo { margin: 0; border-radius: var(--r); overflow: hidden; aspect-ratio: 4 / 3; background: var(--line); }
+.lp-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.lp-svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.lp-svc__item { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 22px 24px; }
+.lp-svc__item h3 { font-size: 24px; margin-bottom: 8px; }
+.lp-svc__item p { color: var(--muted); font-size: 15px; }
+
+.lp-prose { max-width: 760px; }
+.lp-prose h2 { font-size: clamp(30px, 4vw, 46px); margin-bottom: 20px; }
+.lp-prose p { margin-bottom: 16px; color: #3d3c37; font-size: 17px; }
+.lp-prose ul { margin: 0 0 16px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.lp-prose li { position: relative; padding-left: 26px; font-weight: 500; }
+.lp-prose li::before { content: ''; position: absolute; left: 0; top: .65em; width: 12px; height: 3px; background: var(--accent); }
+
+.lp-prj { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.lp-prj figure { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.lp-prj img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.lp-prj figcaption { padding: 14px 16px 16px; display: grid; gap: 2px; }
+.lp-prj strong { font: 700 20px/1.1 var(--f-title); text-transform: uppercase; }
+.lp-prj span { color: var(--muted); font-size: 14px; }
+.lp-more { margin-top: 28px; }
+
+.lp-cta { align-items: center; }
+.lp-cta__btn { display: flex; justify-content: flex-start; }
+.lp-otras { padding: 40px 0 56px; }
+.lp-otras__t { color: var(--accent-d) !important; margin: 0 0 14px; }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.lp-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1.5px solid var(--ink); border-radius: var(--r); font: 700 14px/1 var(--f-title); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; transition: background-color .25s, color .25s; }
+.lp-chips a:hover { background: var(--ink); color: #fff; }
+
+@media (max-width: 960px) {
+  .lp-hero__grid { grid-template-columns: 1fr; }
+  .lp-svc, .lp-prj { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .lp-svc, .lp-prj { grid-template-columns: 1fr; }
+  .faq details p { padding-right: 0; }
+}

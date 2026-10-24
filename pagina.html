@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>%%P_TITLE%%</title>
+  <meta name="description" content="%%P_DESCRIPTION%%">
+  <meta name="theme-color" content="%%COLOR_TINTA%%">
+  <!-- SEO:HEAD -->
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="%%FUENTES_URL%%">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="nav is-scrolled" id="nav">
+    <div class="wrap nav__in">
+      <a class="brand" href="/" aria-label="%%NOMBRE%% · inicio">
+        <img src="/img/logo.jpg" alt="" width="44" height="44">
+        <span><strong>%%MARCA_A%%</strong><small>%%MARCA_B%%</small></span>
+      </a>
+      <nav class="nav__links" id="menu" aria-label="Secciones">
+        <a href="/#servicios">Servicios</a>
+        <a href="/#proyectos">Proyectos</a>
+        <a href="/#proceso">Proceso</a>
+        <a href="/#contacto">Contacto</a>
+        <a class="btn btn--accent nav__cta-m" href="%%P_WA%%" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+      </nav>
+      <a class="btn btn--accent nav__cta" href="%%P_WA%%" target="_blank" rel="noopener">Cotiza tu proyecto <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <button class="nav__burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="lp-hero">
+      <div class="wrap lp-hero__grid">
+        <div>
+          <nav class="lp-crumbs" aria-label="Ruta"><a href="/">Inicio</a> <span aria-hidden="true">/</span> <span>%%P_CORTO%%</span></nav>
+          <p class="eyebrow eyebrow--box">%%P_EYEBROW%%</p>
+          <h1 class="lp-title">%%P_H1%% <em>%%P_H1_DESTACADO%%</em></h1>
+          <p class="lp-lead">%%P_LEAD%%</p>
+          <div class="hero__ctas">
+            <a class="btn btn--dark" href="%%P_WA%%" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+            <a class="btn btn--line" href="#proyectos">Ver obras</a>
+          </div>
+        </div>
+        <figure class="lp-photo">
+          <img src="%%P_FOTO%%" alt="%%P_FOTO_ALT%%" fetchpriority="high" width="1200" height="900">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section--paper" aria-labelledby="lp-servicios">
+      <div class="wrap">
+        <div class="head"><div>
+          <p class="eyebrow">Servicios</p>
+          <h2 id="lp-servicios">Qué construimos <span class="hl">para ti.</span></h2>
+        </div></div>
+        <div class="lp-svc"><!-- P_SERVICIOS --></div>
+      </div>
+    </section>
+
+    <!-- P_SECCIONES -->
+
+    <!-- SI:P_TIENE_PROYECTOS -->
+    <section class="section section--paper" id="proyectos" aria-labelledby="lp-proyectos">
+      <div class="wrap">
+        <div class="head"><div>
+          <p class="eyebrow">Trabajos realizados</p>
+          <h2 id="lp-proyectos">Obras que ya <span class="hl">entregamos.</span></h2>
+          <p class="head__lead">Proyectos reales de GADB Construcciones. En la portada puedes ver las fotos de cada obra.</p>
+        </div></div>
+        <div class="lp-prj"><!-- P_PROYECTOS --></div>
+        <p class="lp-more"><a class="btn btn--line" href="/#proyectos">Ver todos los proyectos</a></p>
+      </div>
+    </section>
+    <!-- /SI:P_TIENE_PROYECTOS -->
+
+    <section class="section" aria-labelledby="lp-faq">
+      <div class="wrap lp-faqwrap">
+        <div class="head"><div>
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2 id="lp-faq">Lo que más <span class="hl">nos preguntan.</span></h2>
+        </div></div>
+        <div class="faq"><!-- P_FAQ --></div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="lp-cta">
+      <div class="wrap cta__grid lp-cta">
+        <div class="cta__text">
+          <h2 id="lp-cta">¿Tienes un proyecto? <span>Cotiza sin compromiso.</span></h2>
+          <p>Cuéntanos qué quieres hacer, en qué sector estás y las medidas aproximadas. Te respondemos por WhatsApp con los siguientes pasos.</p>
+          <ul class="cta__contact">
+            <li><a href="%%P_WA%%" target="_blank" rel="noopener"><small>WhatsApp</small>%%WA_NUMERO%%</a></li>
+            <!-- SI:EMAIL --><li><a href="mailto:%%EMAIL%%"><small>Correo</small>%%EMAIL%%</a></li><!-- /SI:EMAIL -->
+          </ul>
+        </div>
+        <div class="lp-cta__btn"><a class="btn btn--dark" href="%%P_WA%%" target="_blank" rel="noopener">Cotizar por WhatsApp</a></div>
+      </div>
+    </section>
+
+    <section class="lp-otras" aria-label="Otras páginas">
+      <div class="wrap">
+        <p class="about__label lp-otras__t">También te puede interesar</p>
+        <div class="lp-chips"><!-- P_RELACIONADAS --></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <div class="brand brand--foot">
+        <img src="/img/logo.jpg" alt="" width="44" height="44" loading="lazy">
+        <span><strong>%%MARCA_A%%</strong><small>%%MARCA_B%%</small></span>
+      </div>
+      <p class="foot__lema">%%LEMA%% · %%ZONAS_TEXTO%%</p>
+      <p class="foot__copy">© %%ANIO%% %%NOMBRE%% · %%RUBRO%% en la %%REGION%%</p>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="%%P_WA%%" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>
+    <span>Cotiza aquí</span>
+  </a>
+
+  <script>
+    (function () {
+      var b = document.querySelector('.nav__burger'), m = document.getElementById('menu');
+      b.addEventListener('click', function () { var o = !m.classList.contains('is-open'); m.classList.toggle('is-open', o); b.setAttribute('aria-expanded', String(o)); });
+    })();
+  </script>
+</body>
+</html>

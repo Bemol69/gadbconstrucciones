@@ -6,8 +6,8 @@
   "lema": "Construyendo tus ideas",
   "rubro": "Construcción y remodelación",
   "schema_tipo": "GeneralContractor",
-  "seo_titulo": "GADB Construcciones · Casas, quinchos, ampliaciones y remodelaciones en La Serena y Coquimbo",
-  "seo_descripcion": "Empresa constructora de Coquimbo: casas, quinchos, ampliaciones, remodelaciones, piscinas y terrazas en La Serena, Coquimbo y el Valle del Elqui. Cotiza sin compromiso por WhatsApp.",
+  "seo_titulo": "Constructora en La Serena y Coquimbo | GADB Construcciones",
+  "seo_descripcion": "Constructora en La Serena y Coquimbo: construcción de casas, quinchos, ampliaciones y remodelaciones con equipo propio. Visita a terreno y cotización sin compromiso.",
   "site_url": "https://www.gadbconstrucciones.cl",
   "github_repo": "Bemol69/gadbconstrucciones",
   "google_verificacion": "",
@@ -23,5 +23,20 @@
   "fuentes": {
     "titulos": "Barlow Condensed",
     "texto": "Barlow"
-  }
+  },
+  "horario_schema": {
+    "dias": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "abre": "09:00",
+    "cierra": "19:00"
+  },
+  "google_maps_url": "",
+  "sameas": []
 }

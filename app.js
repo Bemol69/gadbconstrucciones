@@ -173,7 +173,7 @@
         const b = document.createElement('button');
         b.type = 'button';
         b.setAttribute('aria-label', `Ver foto ${j + 1}`);
-        b.innerHTML = `<img src="${(actual.t && actual.t[j]) || src}" alt="" width="120" height="120">`;
+        b.innerHTML = `<img src="${(actual.t && actual.t[j]) || src}" alt="${actual.n} · miniatura ${j + 1}" width="120" height="120">`;
         b.addEventListener('click', () => mostrar(j));
         th.appendChild(b);
       });
